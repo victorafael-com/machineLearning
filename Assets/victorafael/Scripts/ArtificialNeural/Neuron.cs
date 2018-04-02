@@ -12,7 +12,8 @@ public class Neuron{
 		Identy,
 		Tan,
 		Step,
-		LeakyLinear
+		ReLu,
+		LeakyReLu
 	}
 
 	public double bias;
@@ -73,8 +74,11 @@ public class Neuron{
 		case ActivationType.Step:
 			activationMethod = ActivationStep;
 			break;
-		case ActivationType.LeakyLinear:
-			activationMethod = ActivationLeakyLinear;
+		case ActivationType.ReLu:
+			activationMethod = ActivationReLu;
+			break;
+		case ActivationType.LeakyReLu:
+			activationMethod = ActivationLeakyReLu;
 			break;
 		}
 	}
@@ -100,10 +104,13 @@ public class Neuron{
 	private double ActivationIdenty(double val){
 		return val;
 	}
-	private double ActivationLeakyLinear(double val){
-		return val < 0 ? 0.05 * val : val;
+	private double ActivationReLu(double val){
+		return val < 0 ? 0 : val;
+	}
+	private double ActivationLeakyReLu(double val){
+		return val < 0 ? 0.01 * val : val;
 	}
 	private double ActivationTan(double val){
-		return Mathf.Tan ((float)val);
+		return ActivationSigmoid (val * 2) * 2 - 1;
 	}
 }

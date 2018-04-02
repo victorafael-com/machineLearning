@@ -8,6 +8,9 @@ public class Brain : MonoBehaviour {
 
 	public int hiddenLayers = 1;
 	public int neuronsPerHiddenLayer = 3;
+	public Neuron.ActivationType inputLayerActivationMethod = Neuron.ActivationType.Sigmoid;
+	public Neuron.ActivationType hiddenLayersActivationMethod = Neuron.ActivationType.Sigmoid;
+	public Neuron.ActivationType outputLayerActivationMethod = Neuron.ActivationType.Sigmoid;
 	public double alpha = 0.8;
 
 	public bool continuousTrain;
@@ -16,7 +19,16 @@ public class Brain : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if (trainingData != null) {
-			neuralNetwork = new ArtificialNeuralNetwork (trainingData.InputAmmount, trainingData.OutputAmmount, hiddenLayers, neuronsPerHiddenLayer, alpha);
+			neuralNetwork = new ArtificialNeuralNetwork (
+				trainingData.InputAmmount,
+				trainingData.OutputAmmount,
+				hiddenLayers,
+				neuronsPerHiddenLayer,
+				alpha,
+				inputLayerActivationMethod,
+				hiddenLayersActivationMethod,
+				outputLayerActivationMethod
+			);
 			Train (trainingData.epochCount);
 		}
 	}

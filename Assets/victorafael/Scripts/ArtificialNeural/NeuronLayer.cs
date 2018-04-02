@@ -6,10 +6,10 @@ public class NeuronLayer  {
 	private Neuron[] neurons;
 	double[] output;
 
-	public NeuronLayer(int neuronCount, int inputs){
+	public NeuronLayer(int neuronCount, int inputs, Neuron.ActivationType activationType){
 		neurons = new Neuron[neuronCount];
 		for (int i = 0; i < neuronCount; i++) {
-			neurons [i] = new Neuron (inputs);
+			neurons [i] = new Neuron (inputs, activationType);
 		}
 		output = new double[neuronCount];
 	}
