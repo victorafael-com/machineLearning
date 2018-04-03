@@ -32,6 +32,29 @@ public class Brain : MonoBehaviour {
 			Train (trainingData.epochCount);
 		}
 	}
+	/// <summary>
+	/// Starts the neural network with the Brain default values
+	/// </summary>
+	/// <param name="inputAmmount">Input ammount.</param>
+	/// <param name="outputAmmount">Output ammount.</param>
+	public void StartNeuralNetwork(int inputAmmount, int outputAmmount){
+		StartNeuralNetwork (inputAmmount, outputAmmount, hiddenLayers, neuronsPerHiddenLayer, alpha, inputLayerActivationMethod, hiddenLayersActivationMethod, outputLayerActivationMethod);
+	}
+
+	/// <summary>
+	/// Starts the neural network with full controls of its setup.
+	/// </summary>
+	/// <param name="inputAmmount">Input ammount.</param>
+	/// <param name="outputAmmount">Output ammount.</param>
+	/// <param name="hiddenLayers">Hidden layers.</param>
+	/// <param name="neuronsPerLayer">Neurons per layer.</param>
+	/// <param name="alpha">Alpha.</param>
+	/// <param name="inputActivationMethod">Input activation method.</param>
+	/// <param name="hiddenLayerActivationMethod">Hidden layer activation method.</param>
+	/// <param name="outputActivationMethod">Output activation method.</param>
+	public void StartNeuralNetwork(int inputAmmount, int outputAmmount, int hiddenLayerAmmount, int neuronsInHiddenLayer, double errorAlpha, Neuron.ActivationType inputActivationMethod, Neuron.ActivationType hiddenActivationMethod, Neuron.ActivationType outputActivationMethod){
+		neuralNetwork = new ArtificialNeuralNetwork (inputAmmount, outputAmmount, hiddenLayerAmmount, neuronsInHiddenLayer, errorAlpha, inputActivationMethod, hiddenActivationMethod, outputActivationMethod);
+	}
 
 	double[] res;
 	double sumError = 0;
@@ -56,6 +79,9 @@ public class Brain : MonoBehaviour {
 
 	public double[] Execute(double[] inputs){
 		return neuralNetwork.Execute (inputs);
+	}
+	public double[] ExecuteAndTrain(double[] inputs, double[] outputs){
+		return neuralNetwork.Execute (inputs, outputs);
 	}
 
 	private string DoubleArrayToString(double[] values){

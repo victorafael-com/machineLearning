@@ -41,4 +41,4 @@ MonoBehaviour:
     - 0
     outputs:
     - 0
-  epochCount: 3000
+  epochCount: 50000
