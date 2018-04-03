@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Security.Cryptography;
 using UnityEngine.Events;
+using System;
+using Random = UnityEngine.Random;
+using Debug = UnityEngine.Debug;
 
 public class Neuron{
 	private delegate double ActivationDelegate(double val);
@@ -69,7 +72,7 @@ public class Neuron{
 			activationMethod = ActivationSigmoid;
 			break;
 		case ActivationType.Tan:
-			activationMethod = ActivationTan;
+			activationMethod = ActivationTanH;
 			break;
 		case ActivationType.Step:
 			activationMethod = ActivationStep;
@@ -98,8 +101,7 @@ public class Neuron{
 		return value < 0 ? 0 : 1;
 	}
 	private double ActivationSigmoid(double val){
-		val = System.Math.Exp (val);
-		return val / (1f + val);
+		return 1.0 / (1.0 + Math.Exp(-val));
 	}
 	private double ActivationIdenty(double val){
 		return val;
@@ -110,7 +112,7 @@ public class Neuron{
 	private double ActivationLeakyReLu(double val){
 		return val < 0 ? 0.01 * val : val;
 	}
-	private double ActivationTan(double val){
-		return ActivationSigmoid (val * 2) * 2 - 1;
+	private double ActivationTanH(double val){
+		return Math.Tanh (val);
 	}
 }
