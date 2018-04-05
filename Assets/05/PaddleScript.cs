@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Brain))]
 public class PaddleScript : MonoBehaviour {
 	private const int MaxEstimationBounce = 8;
 
-	private Brain brain;
+	private MoveBall ball;
+	public Brain brain;
 
 	public float minY = 8.8f;
 	public float maxY = 17.4f;
@@ -22,6 +22,7 @@ public class PaddleScript : MonoBehaviour {
 
 	public LayerMask raycastMask;
 
+	public double[] normalizationValues;
 	private double[] inputValues;
 	private double[] outputs;
 
@@ -29,8 +30,6 @@ public class PaddleScript : MonoBehaviour {
 
 
 	void Start () {
-		
-		brain = GetComponent<Brain> ();
 		/* Inputs		| Outputs
 		 * 				|
 		 * Ball X		| Paddle Velocity Y
@@ -40,18 +39,19 @@ public class PaddleScript : MonoBehaviour {
 		 * Paddle X 	|
 		 * Paddle Y		|
 		 */
+		ball = ballRb.GetComponent<MoveBall> ();
 		inputValues = new double[6];
 		outputs = new double[1];
 		brain.StartNeuralNetwork (6, 1);
 	}
 
 	double[] Run(bool train = false, float value = 0){
-		inputValues [0] = ballRb.position.x;
-		inputValues [1] = ballRb.position.y;
-		inputValues [2] = ballRb.velocity.x;
-		inputValues [3] = ballRb.velocity.y;
-		inputValues [4] = transform.position.x;
-		inputValues [5] = transform.position.y;
+		inputValues [0] = ballRb.transform.localPosition.x / normalizationValues[0];
+		inputValues [1] = ballRb.transform.localPosition.y / normalizationValues[1];
+		inputValues [2] = ballRb.velocity.x / normalizationValues[2];
+		inputValues [3] = ballRb.velocity.y / normalizationValues[3];
+		inputValues [4] = transform.localPosition.x / normalizationValues[4];
+		inputValues [5] = transform.localPosition.y / normalizationValues[5];
 		if (!train) {
 			return brain.Execute (inputValues);
 		} else {
@@ -62,16 +62,24 @@ public class PaddleScript : MonoBehaviour {
 
 	void Update(){
 
-		Vector3 pos = transform.position;
+		Vector3 pos = transform.localPosition;
 		pos.y = Mathf.Clamp (pos.y + currentInput * speed * Time.deltaTime, minY, maxY);
-		transform.position = pos;
+		transform.localPosition = pos;
 
 		Vector2 point;
-		if (train && BounceUntilBackPos (ballRb.position, ballRb.velocity, out point)) {
+
+		bool canTrain = false;
+
+		if (train && Physics2D.CircleCast (ballRb.position, 0.5f, Vector2.up, 0, raycastMask).collider == null) {
+			canTrain = true;
+		}
+
+		if (canTrain && BounceUntilBackPos (ballRb.position, ballRb.velocity, out point)) {
 			currentInput = (float)Run (true, point.y - transform.position.y)[0];
 		} else {
 			currentInput = (float)Run ()[0];
 		}
+		
 	}
 
 	private bool BounceUntilBackPos(Vector2 pos, Vector2 direction, out Vector2 collisionPoint, int iteration = 0, Collider2D disableCollider = null){

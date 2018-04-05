@@ -38,6 +38,8 @@ public class Brain : MonoBehaviour {
 	/// <param name="inputAmmount">Input ammount.</param>
 	/// <param name="outputAmmount">Output ammount.</param>
 	public void StartNeuralNetwork(int inputAmmount, int outputAmmount){
+		if (neuralNetwork != null)
+			return;
 		StartNeuralNetwork (inputAmmount, outputAmmount, hiddenLayers, neuronsPerHiddenLayer, alpha, inputLayerActivationMethod, hiddenLayersActivationMethod, outputLayerActivationMethod);
 	}
 
@@ -53,6 +55,8 @@ public class Brain : MonoBehaviour {
 	/// <param name="hiddenLayerActivationMethod">Hidden layer activation method.</param>
 	/// <param name="outputActivationMethod">Output activation method.</param>
 	public void StartNeuralNetwork(int inputAmmount, int outputAmmount, int hiddenLayerAmmount, int neuronsInHiddenLayer, double errorAlpha, Neuron.ActivationType inputActivationMethod, Neuron.ActivationType hiddenActivationMethod, Neuron.ActivationType outputActivationMethod){
+		if (neuralNetwork != null)
+			return;
 		neuralNetwork = new ArtificialNeuralNetwork (inputAmmount, outputAmmount, hiddenLayerAmmount, neuronsInHiddenLayer, errorAlpha, inputActivationMethod, hiddenActivationMethod, outputActivationMethod);
 	}
 
@@ -72,9 +76,27 @@ public class Brain : MonoBehaviour {
 	}
 
 	void Update(){
-		if (Input.GetKeyUp (KeyCode.Space) || continuousTrain) {
+		if (continuousTrain) {
 			Train (trainingPerCycle);
 		}
+		if (Input.GetKeyUp (KeyCode.Alpha1))
+			Time.timeScale = 1;
+		if (Input.GetKeyUp (KeyCode.Alpha2))
+			Time.timeScale = 2;
+		if (Input.GetKeyUp (KeyCode.Alpha3))
+			Time.timeScale = 3;
+		if (Input.GetKeyUp (KeyCode.Alpha4))
+			Time.timeScale = 4;
+		if (Input.GetKeyUp (KeyCode.Alpha5))
+			Time.timeScale = 5;
+		if (Input.GetKeyUp (KeyCode.Alpha6))
+			Time.timeScale = 6;
+		if (Input.GetKeyUp (KeyCode.Alpha7))
+			Time.timeScale = 7;
+		if (Input.GetKeyUp (KeyCode.Alpha8))
+			Time.timeScale = 8;
+		if (Input.GetKeyUp (KeyCode.Alpha9))
+			Time.timeScale = 9;
 	}
 
 	public double[] Execute(double[] inputs){

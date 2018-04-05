@@ -9,6 +9,9 @@ public class MoveBall : MonoBehaviour {
 	public AudioSource blip;
 	public AudioSource blop;
 
+	public float resetBallInterval = 60;
+	private float lastReset = 0;
+
 	// Use this for initialization
 	void Start () {
 		m_rigidbody = GetComponent<Rigidbody2D> ();
@@ -22,12 +25,17 @@ public class MoveBall : MonoBehaviour {
 		else
 			blip.Play ();
 	}
-	
+
+	void Update(){
+		if (resetBallInterval > 0 && Time.time > lastReset + resetBallInterval) {
+			ResetBall ();
+		}
+	}
+
 	// Update is called once per frame
 	void ResetBall () {
 		transform.position = ballStartPosition;
 		m_rigidbody.velocity = new Vector2(Random.Range(1f,3f),Random.Range(-1f,1f)).normalized * speed;
-		if (Input.GetKeyDown (KeyCode.Space))
-			ResetBall ();
+		lastReset = Time.time;
 	}
 }
